@@ -1,15 +1,25 @@
-from pathlib import Path
-from app.core.utils import write_json
+from typing import List
 
-BASE_FOLDER = Path("/minecraft-cloud-data")
-INSTANCE_FOLDER = BASE_FOLDER / "instance"
-CONFIG_FILE = BASE_FOLDER / "config.json"
-SAMPLE_CONFIG = {
-    "paths": [
-        "mods"
-    ],
-    "auth_token": "123"
-}
+from pydantic import BaseModel
 
-if not CONFIG_FILE.exists():
-    write_json(SAMPLE_CONFIG, CONFIG_FILE)
+from app.core.base import CONFIG_FILE, SAMPLE_CONFIG
+from app.core.utils import read_json, write_json
+
+
+class Config(BaseModel):
+    paths: List[str]
+    auth_token: str
+
+    @classmethod
+    async def get_config(cls):
+        if not CONFIG_FILE.exists():
+            await write_json(SAMPLE_CONFIG, CONFIG_FILE)
+        data = await read_json(CONFIG_FILE)
+        return cls.parse_obj(data)
+
+    async def save_config(self):
+        await write_json(self.dict(), CONFIG_FILE)
+
+
+async def get_config_dependency():
+    return await Config.get_config()
