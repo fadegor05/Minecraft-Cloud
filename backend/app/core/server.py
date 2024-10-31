@@ -1,6 +1,7 @@
 from typing import Tuple
 
 from fastapi import FastAPI, APIRouter
+
 from app.api import routers
 
 
