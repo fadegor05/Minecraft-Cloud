@@ -1,12 +1,13 @@
 from fastapi import File, UploadFile
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
 
 from app.api.v1.router import v1_router
 from app.core.base import INSTANCE_PATH
 from app.schemas.sync import SyncFilePathResponse
+from app.utils.auth import require_api_key
 
 
-@v1_router.post("/files/{directory_path:path}", tags=["Files"])
+@v1_router.post("/files/{directory_path:path}", tags=["Files"], dependencies=[Depends(require_api_key)])
 async def upload_file(directory_path: str, file: UploadFile = File(...)) -> SyncFilePathResponse:
     destination_path = INSTANCE_PATH / directory_path
 
