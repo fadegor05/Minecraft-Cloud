@@ -1,10 +1,10 @@
 from typing import Dict, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, RootModel
 
 
-class FilesHashTree(BaseModel):
-    __root__: Dict[str, Union[str, 'FilesHashTree']]
+class FilesHashTree(RootModel):
+    root: Dict[str, Union[str, "FilesHashTree"]]
 
 
 class SyncBody(BaseModel):
@@ -27,7 +27,7 @@ class SyncServerBody(SyncBody):
 
 class SyncClientResponse(SyncResponse):
     client_download: FilesHashTree
-    server_delete: FilesHashTree
+    client_delete: FilesHashTree
 
 
 class SyncServerResponse(SyncResponse):
