@@ -6,7 +6,7 @@ from app.core.base import INSTANCE_PATH
 from app.schemas.sync import SyncFilePathResponse
 
 
-@v1_router.post("/files/{directory_path:path}")
+@v1_router.post("/files/{directory_path:path}", tags=["Files"])
 async def upload_file(directory_path: str, file: UploadFile = File(...)) -> SyncFilePathResponse:
     destination_path = INSTANCE_PATH / directory_path
 

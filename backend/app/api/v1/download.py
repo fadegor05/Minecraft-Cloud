@@ -5,7 +5,7 @@ from app.api.v1.router import v1_router
 from app.core.base import INSTANCE_PATH
 
 
-@v1_router.get("/files/{file_path:path}")
+@v1_router.get("/files/{file_path:path}", tags=["Files"])
 async def download_file(file_path: str) -> FileResponse:
     full_path = INSTANCE_PATH / file_path
 

@@ -7,7 +7,7 @@ from app.core.base import INSTANCE_PATH
 from app.schemas.sync import SyncFilePathResponse
 
 
-@v1_router.delete("/files/{file_path:path}")
+@v1_router.delete("/files/{file_path:path}", tags=["Files"])
 async def delete_file(file_path: str) -> SyncFilePathResponse:
     full_path = INSTANCE_PATH / file_path
 
