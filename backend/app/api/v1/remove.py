@@ -7,8 +7,8 @@ from app.core.base import INSTANCE_PATH
 from app.schemas.sync import SyncFilePathResponse
 
 
-@v1_router.get("/sync/remove/{file_path:path}")
-async def get_sync_remove_file(file_path: str) -> SyncFilePathResponse:
+@v1_router.delete("/files/{file_path:path}")
+async def delete_file(file_path: str) -> SyncFilePathResponse:
     full_path = INSTANCE_PATH / file_path
 
     if not full_path.exists() or not full_path.is_file():
