@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 
-class SyncFilePathResponse(BaseModel):
+class FilesPathResponse(BaseModel):
     file_path: str

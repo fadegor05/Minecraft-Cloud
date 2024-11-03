@@ -3,12 +3,12 @@ from fastapi import HTTPException, Depends
 
 from app.api.v1.router import v1_router
 from app.core.base import INSTANCE_PATH
-from app.schemas.sync import SyncFilePathResponse
+from app.schemas.files import FilesPathResponse
 from app.utils.auth import require_api_key
 
 
 @v1_router.post("/files/{directory_path:path}", tags=["Files"], dependencies=[Depends(require_api_key)])
-async def upload_file(directory_path: str, file: UploadFile = File(...)) -> SyncFilePathResponse:
+async def upload_file(directory_path: str, file: UploadFile = File(...)) -> FilesPathResponse:
     destination_path = INSTANCE_PATH / directory_path
 
     destination_path.mkdir(parents=True, exist_ok=True)
@@ -23,4 +23,4 @@ async def upload_file(directory_path: str, file: UploadFile = File(...)) -> Sync
         raise HTTPException(500, "Failed to save the file.") from e
     finally:
         file.file.close()
-    return SyncFilePathResponse(file_path=str(full_path))
+    return FilesPathResponse(file_path=str(full_path))
