@@ -7,9 +7,9 @@ from app.schemas.files import FilesPathResponse
 from app.utils.auth import require_api_key
 
 
-@v1_router.post("/files/{directory_path:path}", tags=["Files"], dependencies=[Depends(require_api_key)])
-async def upload_file(directory_path: str, file: UploadFile = File(...)) -> FilesPathResponse:
-    destination_path = INSTANCE_PATH / directory_path
+@v1_router.post("/files/{instance}/{directory_path:path}", tags=["Files"], dependencies=[Depends(require_api_key)])
+async def upload_file(instance: str, directory_path: str, file: UploadFile = File(...)) -> FilesPathResponse:
+    destination_path = INSTANCE_PATH / instance / directory_path
 
     destination_path.mkdir(parents=True, exist_ok=True)
 
