@@ -10,10 +10,14 @@ from app.utils.hash import get_pydantic_hash
 from app.utils.path import get_directory_hash
 
 
-@v1_router.post("/sync/server", tags=["Sync"], dependencies=[Depends(require_api_key)])
-async def sync_server(body: SyncServerBody, config: Config = Depends(get_config_dependency)) -> SyncServerResponse:
+@v1_router.post("/sync/server/{instance}", tags=["Sync"], dependencies=[Depends(require_api_key)])
+async def sync_server(instance: str, body: SyncServerBody,
+                      config: Config = Depends(get_config_dependency)) -> SyncServerResponse:
     # TODO: Add caching, if server_hash == client_hash
-    server_hash_tree = await get_directory_hash(INSTANCE_PATH, config.paths)
+    full_path = INSTANCE_PATH / instance
+    if not full_path.exists():
+        full_path.mkdir()
+    server_hash_tree = await get_directory_hash(full_path, config.paths)
     server_hash = await get_pydantic_hash(server_hash_tree)
     upload, delete = await get_pydantic_diff(server_hash_tree, body.client_hash_tree)
     return SyncServerResponse(server_hash=server_hash, server_hash_tree=server_hash_tree, server_upload=upload,
